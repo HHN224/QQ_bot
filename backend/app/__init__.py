@@ -1,0 +1,2 @@
+"""QQ Daily Digest backend."""
+
