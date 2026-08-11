@@ -24,7 +24,18 @@ function Empty({ children }: { children: string }) {
 
 function DigestCard({ item }: { item: DigestItem }) {
   const credibility = { verified: "已核验", unverified: "仅群友说法", disputed: "存在争议" }[item.credibility];
-  const sendFeedback = (value: "useful" | "not_useful") => api("/api/feedback", { method: "POST", body: JSON.stringify({ digest_item_id: item.id, value }) }).catch(() => undefined);
+  const [feedbackValue, setFeedbackValue] = useState<"useful" | "not_useful" | null>(null);
+  const [feedbackStatus, setFeedbackStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
+  const sendFeedback = async (value: "useful" | "not_useful") => {
+    setFeedbackStatus("saving");
+    try {
+      await api("/api/feedback", { method: "POST", body: JSON.stringify({ digest_item_id: item.id, value }) });
+      setFeedbackValue(value);
+      setFeedbackStatus("saved");
+    } catch {
+      setFeedbackStatus("error");
+    }
+  };
   return (
     <article className="digest-card">
       <div className="card-top"><span className="category">{item.category}</span><span className={`credibility ${item.credibility}`}>{credibility}</span></div>
@@ -34,7 +45,13 @@ function DigestCard({ item }: { item: DigestItem }) {
       <blockquote>{item.source_excerpt}</blockquote>
       <div className="source"><span>{item.source_author}</span><span>{item.source_time}</span><span>回群定位：搜索“{item.source_excerpt.slice(0, 24)}”</span></div>
       {item.links.length > 0 && <div className="links">{item.links.map((link) => <a key={link} href={link} target="_blank" rel="noreferrer">查看相关链接 ↗</a>)}</div>}
-      <div className="feedback"><span>可选反馈</span><button onClick={() => sendFeedback("useful")} aria-label="有用">有用</button><button onClick={() => sendFeedback("not_useful")} aria-label="没用">没用</button></div>
+      <div className="feedback">
+        <span className={`feedback-status ${feedbackStatus}`} aria-live="polite">
+          {feedbackStatus === "saving" ? "正在保存…" : feedbackStatus === "saved" ? "已记录，感谢反馈" : feedbackStatus === "error" ? "保存失败，请重试" : "可选反馈"}
+        </span>
+        <button type="button" className={feedbackValue === "useful" ? "selected" : ""} disabled={feedbackStatus === "saving"} aria-pressed={feedbackValue === "useful"} onClick={() => sendFeedback("useful")} aria-label="有用">有用</button>
+        <button type="button" className={feedbackValue === "not_useful" ? "selected" : ""} disabled={feedbackStatus === "saving"} aria-pressed={feedbackValue === "not_useful"} onClick={() => sendFeedback("not_useful")} aria-label="没用">没用</button>
+      </div>
     </article>
   );
 }
@@ -132,4 +149,3 @@ export default function App() {
     </main>
   </div>;
 }
-

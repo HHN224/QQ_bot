@@ -1,4 +1,4 @@
-﻿:root { font-family: "Noto Sans SC", system-ui, sans-serif; color: #17251f; background: #f4f2eb; font-synthesis: none; }
+:root { font-family: "Noto Sans SC", system-ui, sans-serif; color: #17251f; background: #f4f2eb; font-synthesis: none; }
 * { box-sizing: border-box; }
 body { margin: 0; min-width: 320px; min-height: 100vh; }
 button, input, textarea { font: inherit; }
@@ -25,3 +25,12 @@ header { display: flex; justify-content: space-between; align-items: end; border
 @media (max-width: 580px) { header { align-items: start; } h1 { font-size: 25px; }.inbox-layout { gap: 24px; }.paste-card textarea { min-height: 310px; }.paste-footer { align-items: stretch; flex-direction: column; }.field-grid { grid-template-columns: 1fr; }.field-grid .wide { grid-column: auto; }.history-list button { grid-template-columns: 1fr auto; }.history-list span { grid-column: 1/-1; }.history-list i { grid-row: 1; grid-column: 2; }.settings-status { flex-direction: column; gap: 8px; }.digest-card { padding: 20px; }.feedback { margin: 18px -20px -20px; } }
 
 
+
+.feedback-status { margin-right: 2px; }
+.feedback-status.saved { color: #3f755e; font-weight: 600; }
+.feedback-status.error { color: #a04b42; font-weight: 600; }
+.feedback-status.saving { color: #6e7d75; }
+.feedback button { min-width: 42px; min-height: 28px; padding: 5px 9px; transition: background .15s, border-color .15s, color .15s; }
+.feedback button:hover:not(:disabled) { border-color: #7f9b8d; color: #285b47; background: #f0f5ef; }
+.feedback button.selected { border-color: #356b55; color: white; background: #356b55; }
+.feedback button:disabled { cursor: wait; opacity: .6; }

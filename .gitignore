@@ -1,4 +1,4 @@
-﻿.env
+.env
 .venv/
 __pycache__/
 .pytest_cache/
@@ -10,4 +10,4 @@ data/*.db-*
 *.tsbuildinfo
 frontend/vite.config.js
 frontend/vite.config.d.ts
-
+data/server.pid
